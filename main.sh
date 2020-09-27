@@ -10,6 +10,8 @@ calculate(){
     ;;
     esac
 }
+. import_lib.sh
+
 echo "Start script"
 case $1 in 
     "calc") echo "calculation start."
