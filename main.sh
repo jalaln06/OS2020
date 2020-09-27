@@ -1,16 +1,6 @@
-sum(){
-    let output=$1+$2
-    echo $1 +  $2 = $output
-    echo $output
-}
-calculate(){
-    case $1 in 
-    "sum") echo "begin sum"
-    sum $2 $3
-    ;;
-    esac
-}
-. import_lib.sh
+#!/bin/bash
+source import_lib.sh
+check_files_exist
 
 echo "Start script"
 case $1 in 
