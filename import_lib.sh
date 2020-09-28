@@ -1,7 +1,8 @@
 function check()
 {
 local filename=$1
-if test -f " $filename"; then
+if  [ -f "$filename" ]; 
+    then
     echo "$filename exists."
     else
     echo "$filename not found"
@@ -10,7 +11,7 @@ fi
 }
 function import()
 {
-    local filename =$1
+    local filename=$1
     . $filename
 }
 function check_and_import(){
@@ -19,12 +20,5 @@ function check_and_import(){
 }
 
 function check_files_exist(){
-check_and_import /libs/calc.sh
-check_and_import /libs/search.sh
-check_and_import /libs/strlen.sh
-check_and_import /libs/exit.sh
-check_and_import /libs/log.sh
-check_and_import /libs/interactive.sh
-check_and_import /libs/reverse.sh
-check_and_import /libs/help.sh
+check_and_import /mnt/c/ubuntu/OS2020/libs/calc.sh
 }
