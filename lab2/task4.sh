@@ -1,17 +1,15 @@
-#$/bin/bash
-
-for pid in $(ps -Ao pid | tail -n +2)
+#!/bin/bash
+for pid in $(ps -e -o pid);
 do
-	ppid=$(grep -Ehsi "ppid:\s+.+" /proc/$pid/status | grep -o "[0-9]\+")
-	runtm=$(grep -Ehsi "se\.sum_exec_runtime.+:\s+.+" /proc/$pid/sched | awk '{print $3}')
-	swtch=$(grep -Ehsi "nr_switches.+:\s+.+" /proc/$pid/sched | awk '{print $3}')
-	if [ -z $ppid ]; then
-		ppid=0
+	status="/proc/"$pid"/status"
+	sched="/proc/"$pid"/sched"
+
+	PPid=$(grep -s "PPid" $status | grep -E -s -o "[0-9]+")
+	Sum=$(grep -s "sum_exec_runtime" $sched | grep -E -s -o "[0-9]*[.,]?[0-9]+")
+	nr=$(grep -s "nr_switches" $sched | grep -E -s -o "[0-9]+")
+	if [[ -n $nr ]]
+	then
+		ART=$(echo "scale=7; $Sum/$nr" | bc -l)
+		echo "ProcessID=$pid : Parent_processID=$PPid : Average_Running_Time=$ART"
 	fi
-	if [ -z $runtm ] || [ -z $swtch ]; then
-		art=0
-	else
-		art=$(echo "scale=2; $runtm/$swtch" | bc)
-	fi
-	echo "$pid $ppid $art"
-done | sort -nk 2 | awk '{print "ProcessID="$1 " : " "Parent_ProcessID="$2 " : " "Average_Running_Time="$3}' > task4_result
+done | sort -n -t '=' -k 3 > ans_4
